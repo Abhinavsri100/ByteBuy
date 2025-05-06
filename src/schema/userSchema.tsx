@@ -1,6 +1,6 @@
 /** @format */
 
-import path from "path";
+
 import * as Yup from "yup";
 export const signupSchema = Yup.object({
   firstName: Yup.string().min(2).required("Please enter your firstName"),

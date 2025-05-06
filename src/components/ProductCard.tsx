@@ -2,8 +2,8 @@
 
 /** @format */
 import React from "react";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import { RootState } from "../redux/store";
+import { useAppDispatch } from "../hooks";
+
 import { addToCart } from "../slice/cartSlice";
 import { useNavigate } from "react-router-dom";
 

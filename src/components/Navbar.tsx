@@ -1,43 +1,7 @@
 /** @format */
-
-// /** @format */
-
-// import React, { useEffect } from "react";
-// import { useAppDispatch, useAppSelector } from "../hooks";
-// import { logout } from "../slice/userSlice";
-// import { RootState } from "../redux/store";
-// import { useNavigate } from "react-router-dom";
-// function Navbar() {
-//   const dispatch = useAppDispatch();
-//   const navigate = useNavigate();
-//   const currentUser = useAppSelector((state: RootState) => state.Users);
-
-//   useEffect(() => {
-//     if (!currentUser.isAuthenticated) navigate("/login");
-//   }, [currentUser.isAuthenticated, navigate]);
-//   function handleLogout() {
-//     dispatch(logout());
-//   }
-//   return (
-//     <div className="bg-black p-[1.5rem] text-white flex flex-row justify-between">
-//       <div>ByteBuy</div>
-//       <div className="flex flex-row gap-[1rem]">
-//         <div className="bg-white text-black rounded-full p-1">
-//           {currentUser?.userDetails?.firstName?.slice(0, 2).toUpperCase() ||
-//             "US"}
-//         </div>
-//         <div className="flex flex-col justify-center">
-//           <button onClick={handleLogout}>Logout</button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Navbar;
 /** @format */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ShoppingCart } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { logout } from "../slice/userSlice";

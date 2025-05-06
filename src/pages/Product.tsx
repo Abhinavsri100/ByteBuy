@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import Navbar from "../components/Navbar";
+
 import { useAppDispatch } from "../hooks";
 import { addToCart } from "../slice/cartSlice";
 import Cart from "../components/Cart";
