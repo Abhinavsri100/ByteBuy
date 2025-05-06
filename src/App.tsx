@@ -1,24 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+/** @format */
+
+import React, { useState } from "react";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import { useAppSelector } from "./hooks";
+import { RootState } from "./redux/store";
+import Product from "./pages/Product";
+import Payment from "./pages/Payment";
 
 function App() {
+  const [open, setOpen] = useState(false);
+  const userData = useAppSelector(
+    (state: RootState) => state.Users.userDetails
+  );
+  const isAuthenticated = useAppSelector(
+    (state: RootState) => state.Users.isAuthenticated
+  );
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar open={open} setOpen={setOpen} />
+      <Routes>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/payment-successful" element={<Payment />} />
+        <Route path="/home" element={<Home open={open} setOpen={setOpen} />} />
+        <Route
+          path="/product/:id"
+          element={<Product open={open} setOpen={setOpen} />}
+        />
+      </Routes>
     </div>
   );
 }
