@@ -35,7 +35,7 @@ function CartItem(item: Product) {
   return (
     <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border">
       {/* Image */}
-      <div className="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden border">
+      <div className="w-20 h-24 flex-shrink-0 rounded-lg overflow-hidden border">
         <img
           src={item.image}
           alt={item.title}
@@ -45,7 +45,9 @@ function CartItem(item: Product) {
 
       {/* Details */}
       <div className="flex-1 flex flex-col items-start md:items-start">
-        <h3 className="text-lg font-semibold text-gray-800">{item.title}</h3>
+        <h3 className="text-sm font-semibold text-gray-800">
+          {item.title.length > 15 ? item.title.slice(0, 14) : item.title}
+        </h3>
         <p className="text-sm text-gray-500 mt-1">{item.category}</p>
         <p className="text-md font-bold text-green-600 mt-2">${item.price}</p>
         <div className="text-yellow-500 text-sm mt-1">
