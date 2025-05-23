@@ -34,7 +34,6 @@ function CartItem(item: Product) {
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border">
-      {/* Image */}
       <div className="w-20 h-24 flex-shrink-0 rounded-lg overflow-hidden border">
         <img
           src={item.image}

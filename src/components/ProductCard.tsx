@@ -1,8 +1,8 @@
 /** @format */
 
 /** @format */
-import React from "react";
-import { useAppDispatch } from "../hooks";
+import React, { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { ToastContainer, toast } from "react-toastify";
 import { addToCart } from "../slice/cartSlice";
 import { useNavigate } from "react-router-dom";
@@ -33,6 +33,8 @@ function ProductCard({
 }: Product) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const currentMode = useAppSelector((state) => state.Mode.mode);
+  const [mode, setMode] = useState<String>("");
   function handleProductView() {
     navigate(`/product/${id}`);
   }
@@ -52,30 +54,49 @@ function ProductCard({
     toast("Item Added to the Card");
   }
   return (
-    <div className="flex flex-col gap-[1rem]">
+    <div
+      className={`flex flex-col gap-[1rem] ${
+        currentMode === "light" ? "bg-[#F3F4F6]" : "bg-gray-800"
+      }`}
+    >
       <div className="">
         <ToastContainer />
       </div>
-      <div className="flex flex-col h-full bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 cursor-pointer ">
+      <div
+        className={`flex flex-col h-full  rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 cursor-pointer ${
+          currentMode === "light"
+            ? "bg-white text-black"
+            : "bg-black text-white"
+        }`}
+      >
         <div
-          className="relative pt-[100%] bg-gray-100"
+          className={`relative pt-[100%] ${
+            currentMode === "light" ? "bg-gray-100" : "bg-gray-950"
+          } `}
           onClick={handleProductView}
         >
           <img
             src={image}
             alt={title}
             className="absolute top-0 left-0 w-full h-full object-contain p-4"
+            loading="lazy"
           />
         </div>
 
         <div className="flex flex-col flex-grow p-4">
           <div className="mb-2">
-            <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
+            <span
+              className={`px-2 py-1 text-xs font-medium  rounded-full ${
+                currentMode === "light"
+                  ? "bg-gray-100 text-gray-800"
+                  : "bg-gray-800 text-gray-100"
+              }`}
+            >
               {category}
             </span>
           </div>
 
-          <h3 className="text-lg font-medium text-gray-900 mb-1">
+          <h3 className="text-lg font-medium  mb-1">
             {title.length > 40 ? title.substring(0, 40) + "..." : title}
           </h3>
 

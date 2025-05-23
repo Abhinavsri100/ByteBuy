@@ -1,13 +1,15 @@
 /** @format */
 /** @format */
 
-import React, { useEffect } from "react";
-import { ShoppingCart } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import { Light, LightMode, ShoppingCart } from "@mui/icons-material";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { logout } from "../slice/userSlice";
 import { RootState } from "../redux/store";
 import { useNavigate } from "react-router-dom";
 import { clearTheCart } from "../slice/cartSlice";
+import { setDark, setLight } from "../slice/modeSlice";
 interface NavbarProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -15,12 +17,15 @@ interface NavbarProps {
 function Navbar({ open, setOpen }: NavbarProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [mode, setMode] = useState<String>("");
   const currentUser = useAppSelector((state: RootState) => state.Users);
+  const currentMode = useAppSelector((state: RootState) => state.Mode.mode);
   function handleCart() {
     setOpen(!open);
   }
   useEffect(() => {
     if (!currentUser.isAuthenticated) navigate("/login");
+    dispatch(setLight({ mode: "light" }));
   }, [currentUser.isAuthenticated]);
 
   function handleLogout() {
@@ -29,6 +34,12 @@ function Navbar({ open, setOpen }: NavbarProps) {
   }
   function handleClick() {
     navigate("/home");
+  }
+  function handleModeChange() {
+    console.log("first");
+    if (currentMode == "light") {
+      dispatch(setDark({ mode: "dark" }));
+    } else dispatch(setLight({ mode: "light" }));
   }
   return (
     <div className="bg-black px-6 py-4 text-white flex items-center justify-between shadow-md animate-fadeIn">
@@ -54,6 +65,9 @@ function Navbar({ open, setOpen }: NavbarProps) {
           </button>
           <div className="cursor-pointer" onClick={handleCart}>
             <ShoppingCart />
+          </div>
+          <div className="cursor-pointer" onClick={handleModeChange}>
+            {currentMode === "light" ? <DarkModeIcon /> : <LightMode />}
           </div>
         </div>
       )}

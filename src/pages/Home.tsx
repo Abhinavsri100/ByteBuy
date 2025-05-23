@@ -7,7 +7,9 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import axios from "axios";
 import Cart from "../components/Cart";
-
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { RootState } from "../redux/store";
+import { setDark, setLight } from "../slice/modeSlice";
 
 const category = [
   "All",
@@ -37,9 +39,10 @@ interface NavbarProps {
 
 function Home({ open, setOpen }: NavbarProps) {
   const [cat, setCat] = useState("All");
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
-
+  const mode = useAppSelector((state: RootState) => state.Mode.mode);
   async function fetchAllProducts() {
     try {
       setLoading(true);
@@ -55,13 +58,12 @@ function Home({ open, setOpen }: NavbarProps) {
       console.error(errorMessage);
     }
   }
-
   useEffect(() => {
     fetchAllProducts();
   }, [cat]);
 
-  function changeCategory(e: any) {
-    setCat(e.target.innerText);
+  function changeCategory(e: React.MouseEvent<HTMLDivElement>) {
+    setCat(e.currentTarget.innerText);
   }
 
   return (
@@ -71,7 +73,13 @@ function Home({ open, setOpen }: NavbarProps) {
       ) : (
         <>
           {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-3 px-4 py-6">
+          <div
+            className={`flex flex-wrap justify-center gap-3 px-4 py-6 ${
+              mode === "light"
+                ? "bg-gray-100 text-gray-800"
+                : " bg-gray-800 text-gray-100"
+            }`}
+          >
             {category.map((c, id) => (
               <div
                 key={id}
@@ -88,7 +96,11 @@ function Home({ open, setOpen }: NavbarProps) {
           </div>
 
           {/* Product Grid */}
-          <div className="px-6 py-4 grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div
+            className={`px-6 py-4 grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${
+              mode === "light" ? "bg-[#F3F4F6]" : "bg-gray-800"
+            }`}
+          >
             {loading ? (
               <p className="text-center col-span-full text-gray-500">
                 Loading products...

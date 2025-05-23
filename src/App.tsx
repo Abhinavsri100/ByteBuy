@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 
 import Product from "./pages/Product";
 import Payment from "./pages/Payment";
+import NotHuman from "./pages/Error";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -22,6 +23,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/payment-successful" element={<Payment />} />
         <Route path="/home" element={<Home open={open} setOpen={setOpen} />} />
+        <Route path="/error" element={<NotHuman />} />
         <Route
           path="/product/:id"
           element={<Product open={open} setOpen={setOpen} />}

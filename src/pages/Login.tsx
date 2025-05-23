@@ -1,118 +1,18 @@
 /** @format */
 
-// /** @format */
 
-// import React, { useEffect, useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import { useAppDispatch, useAppSelector } from "../hooks";
-// import { useFormik } from "formik";
-// import { login } from "../slice/userSlice";
-// import { loginSchema } from "../schema/userSchema";
-// import { RootState } from "../redux/store";
-// const initialValues = {
-//   email: "",
-//   password: "",
-// };
-// function Login() {
-//   const dispatch = useAppDispatch();
-//   const navigate = useNavigate();
-//   const isAuthenticated = useAppSelector(
-//     (state: RootState) => state.Users.isAuthenticated
-//   );
-//   useEffect(() => {
-//     if (isAuthenticated) navigate("/home");
-//   }, [isAuthenticated, navigate]);
-//   const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
-//     initialValues,
-//     validationSchema: loginSchema,
-//     onSubmit: (values) => {
-//       console.log(values);
-//       dispatch(login(values));
-//     },
-//   });
-//   return (
-//     <div className="h-[100vh] flex flex-row gap-[5rem] justify-center  items-center bg-gray-100 ">
-//       <div className="shadow-2xl pt-[2rem] md:w-fit w-[80vw] bg-white">
-//         <div>
-//           <h1 className="text-2xl font-bold">Login</h1>
-//         </div>
-
-//         <div className="border-1 border-black flex flex-row gap-[8rem] justify-center  items-center   md:p-[5rem] p-[2rem] w-full">
-//           <form
-//             onSubmit={handleSubmit}
-//             className="flex flex-col gap-[3rem] md:p-[1.5rem] md:py-[3rem] md:w-[50%] w-[100%]  "
-//           >
-//             <div className="flex flex-col justify-center">
-//               <input
-//                 type="email"
-//                 name="email"
-//                 id="email"
-//                 value={values.email}
-//                 onBlur={handleBlur}
-//                 onChange={handleChange}
-//                 autoComplete="off"
-//                 placeholder="Email"
-//                 className="p-[0.7rem] border-b  w-[60%] md:w-[100%]  rounded-xl"
-//               />
-//               <p className="flex flex-row justify-start text-sm text-red-600">
-//                 {errors.email}
-//               </p>
-//             </div>
-//             <div className="flex flex-col justify-center">
-//               <input
-//                 type="password"
-//                 name="password"
-//                 id="password"
-//                 value={values.password}
-//                 autoComplete="off"
-//                 placeholder="password"
-//                 onBlur={handleBlur}
-//                 onChange={handleChange}
-//                 className="p-[0.7rem] border-b w-[60%] md:w-[100%]  rounded-xl"
-//               />
-//               <p className="flex flex-row justify-start text-sm text-red-600">
-//                 {errors.password}
-//               </p>
-//             </div>
-//             <div className="">
-//               <button
-//                 type="submit"
-//                 className="p-[1rem] bg-black text-white rounded-2xl w-[60%] md:w-[100%] "
-//               >
-//                 Login
-//               </button>
-//             </div>
-
-//             <div>
-//               New user?{" "}
-//               <Link className=" cursor-pointer underline" to={"/signup"}>
-//                 register
-//               </Link>
-//             </div>
-//           </form>
-//           <div className="md:block hidden">
-//             <img
-//               src="tshirt.jpg"
-//               alt=""
-//               className="h-[20rem] md:block hidden"
-//             />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Login;
 /** @format */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { useFormik } from "formik";
 import { login } from "../slice/userSlice";
 import { loginSchema } from "../schema/userSchema";
 import { RootState } from "../redux/store";
+import axios from "axios";
+import { setLight } from "../slice/modeSlice";
 
 const initialValues = {
   email: "",
@@ -121,22 +21,36 @@ const initialValues = {
 
 function Login() {
   const dispatch = useAppDispatch();
+  const [captcha, setCaptcha] = useState<string>("");
   const navigate = useNavigate();
   const isAuthenticated = useAppSelector(
     (state: RootState) => state.Users.isAuthenticated
   );
-
+  useEffect(() => {
+    if (!isAuthenticated) navigate("/login");
+  }, []);
   useEffect(() => {
     if (isAuthenticated) navigate("/home");
+    else navigate("/login");
   }, [isAuthenticated, navigate]);
 
   const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues,
     validationSchema: loginSchema,
     onSubmit: (values) => {
-      dispatch(login(values));
+      if (captcha) {
+        dispatch(login(values));
+        dispatch(setLight({ mode: "light" }));
+      } else {
+        navigate("/error");
+      }
     },
   });
+  async function handleRecaptcha(value: String | null) {
+    console.log(value);
+    setCaptcha(`${value}`);
+    if (!value) navigate("/error");
+  }
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 p-4">
@@ -182,7 +96,9 @@ function Login() {
               </div>
               <button
                 type="submit"
-                className="bg-black text-white py-3 rounded-lg hover:bg-gray-900 transition-all duration-200 shadow-md"
+                className={`bg-black text-white py-3 rounded-lg hover:bg-gray-900 transition-all duration-200 shadow-md ${
+                  !captcha ? "cursor-not-allowed opacity-50" : ""
+                }`}
               >
                 Login
               </button>
@@ -195,6 +111,10 @@ function Login() {
                   Register
                 </Link>
               </p>
+              <ReCAPTCHA
+                sitekey="6LdMQTIrAAAAAG4RLCsc40VSxWecojNEPNCovoFW"
+                onChange={handleRecaptcha}
+              />
             </form>
           </div>
 
@@ -213,3 +133,4 @@ function Login() {
 }
 
 export default Login;
+// 6LcaPjIrAAAAAJTImeuV-AS8CjDeSiEVMSTeHyHO
